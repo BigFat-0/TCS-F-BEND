@@ -69,11 +69,11 @@ function handleLogin(e) {
     // Show success and redirect
     if (loginType === 'admin') {
         showSuccess('Admin Login Successful!', 'Redirecting to admin panel...', () => {
-            window.location.href = 'admin.html';
+            window.location.href = 'admin.php';
         });
     } else {
         showSuccess('Login Successful!', 'Welcome back to Hair Cutting Hub!', () => {
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         });
     }
 }
@@ -118,7 +118,7 @@ function handleSignup(e) {
     
     // Show success and redirect
     showSuccess('Account Created Successfully!', 'Welcome to Hair Cutting Hub!', () => {
-        window.location.href = 'index.html';
+        window.location.href = 'index.php';
     });
 }
 
@@ -244,9 +244,9 @@ function checkExistingLogin() {
     if (isLoggedIn === 'true' && currentUser.email) {
         // User is already logged in, redirect based on type
         if (currentUser.type === 'admin') {
-            window.location.href = 'admin.html';
+            window.location.href = 'admin.php';
         } else {
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         }
     }
 }

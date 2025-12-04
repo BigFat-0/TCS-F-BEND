@@ -23,14 +23,14 @@
                 <span>Hair Cutting Hub</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="barbers.html" class="nav-link">Barbers</a></li>
-                <li><a href="booking.html" class="nav-link active">Booking</a></li>
-                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-                <li><a href="theme-selector.html" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
-                <li><a href="login.html" class="nav-link login-link">Login</a></li>
+                <li><a href="index.php" class="nav-link">Home</a></li>
+                <li><a href="services.php" class="nav-link">Services</a></li>
+                <li><a href="barbers.php" class="nav-link">Barbers</a></li>
+                <li><a href="booking.php" class="nav-link active">Booking</a></li>
+                <li><a href="gallery.php" class="nav-link">Gallery</a></li>
+                <li><a href="contact.php" class="nav-link">Contact</a></li>
+                <li><a href="theme-selector.php" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
+                <li><a href="login.php" class="nav-link login-link">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -55,39 +55,13 @@
                         <div class="booking-step active" id="step-1">
                             <h3>Select Service</h3>
                             <div class="service-options">
-                                <div class="service-option" data-service="Classic Haircut" data-price="25">
-                                    <i class="fas fa-cut"></i>
-                                    <span>Classic Haircut - $25</span>
-                                </div>
-                                <div class="service-option" data-service="Fade Cut" data-price="30">
-                                    <i class="fas fa-magic"></i>
-                                    <span>Fade Cut - $30</span>
-                                </div>
-                                <div class="service-option" data-service="Beard Trim" data-price="20">
-                                    <i class="fas fa-user-tie"></i>
-                                    <span>Beard Trim - $20</span>
-                                </div>
-                                <div class="service-option" data-service="Premium Package" data-price="60">
-                                    <i class="fas fa-crown"></i>
-                                    <span>Premium Package - $60</span>
-                                </div>
+                                <!-- Services will be loaded dynamically -->
                             </div>
                         </div>
                         <div class="booking-step" id="step-2">
                             <h3>Choose Barber</h3>
                             <div class="barber-options">
-                                <div class="barber-option" data-barber="Mike Johnson">
-                                    <div class="barber-avatar"><i class="fas fa-user"></i></div>
-                                    <span>Mike Johnson</span>
-                                </div>
-                                <div class="barber-option" data-barber="David Rodriguez">
-                                    <div class="barber-avatar"><i class="fas fa-user"></i></div>
-                                    <span>David Rodriguez</span>
-                                </div>
-                                <div class="barber-option" data-barber="Alex Thompson">
-                                    <div class="barber-avatar"><i class="fas fa-user"></i></div>
-                                    <span>Alex Thompson</span>
-                                </div>
+                                <!-- Barbers will be loaded dynamically -->
                             </div>
                         </div>
                         <div class="booking-step" id="step-3">

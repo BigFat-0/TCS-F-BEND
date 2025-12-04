@@ -23,14 +23,14 @@
                 <span>Hair Cutting Hub</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="barbers.html" class="nav-link">Barbers</a></li>
-                <li><a href="booking.html" class="nav-link">Booking</a></li>
-                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
-                <li><a href="contact.html" class="nav-link active">Contact</a></li>
-                <li><a href="theme-selector.html" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
-                <li><a href="login.html" class="nav-link login-link">Login</a></li>
+                <li><a href="index.php" class="nav-link">Home</a></li>
+                <li><a href="services.php" class="nav-link">Services</a></li>
+                <li><a href="barbers.php" class="nav-link">Barbers</a></li>
+                <li><a href="booking.php" class="nav-link">Booking</a></li>
+                <li><a href="gallery.php" class="nav-link">Gallery</a></li>
+                <li><a href="contact.php" class="nav-link active">Contact</a></li>
+                <li><a href="theme-selector.php" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
+                <li><a href="login.php" class="nav-link login-link">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -111,19 +111,19 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="barbers.html">Barbers</a></li>
-                        <li><a href="booking.html">Booking</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="services.php">Services</a></li>
+                        <li><a href="barbers.php">Barbers</a></li>
+                        <li><a href="booking.php">Booking</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Services</h4>
                     <ul>
-                        <li><a href="services.html">Haircuts</a></li>
-                        <li><a href="services.html">Beard Styling</a></li>
-                        <li><a href="services.html">Hot Shaves</a></li>
-                        <li><a href="services.html">Hair Washing</a></li>
+                        <li><a href="services.php">Haircuts</a></li>
+                        <li><a href="services.php">Beard Styling</a></li>
+                        <li><a href="services.php">Hot Shaves</a></li>
+                        <li><a href="services.php">Hair Washing</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">

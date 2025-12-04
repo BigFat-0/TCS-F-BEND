@@ -34,14 +34,14 @@
                 <span>Hair Cutting Hub</span>
             </div>
             <ul class="nav-menu" id="nav-menu">
-                <li><a href="index.html" class="nav-link active">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="barbers.html" class="nav-link">Barbers</a></li>
-                <li><a href="booking.html" class="nav-link">Booking</a></li>
-                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-                <li><a href="theme-selector.html" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
-                <li><a href="login.html" class="nav-link login-link">Login</a></li>
+                <li><a href="index.php" class="nav-link active">Home</a></li>
+                <li><a href="services.php" class="nav-link">Services</a></li>
+                <li><a href="barbers.php" class="nav-link">Barbers</a></li>
+                <li><a href="booking.php" class="nav-link">Booking</a></li>
+                <li><a href="gallery.php" class="nav-link">Gallery</a></li>
+                <li><a href="contact.php" class="nav-link">Contact</a></li>
+                <li><a href="theme-selector.php" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
+                <li><a href="login.php" class="nav-link login-link">Login</a></li>
             </ul>
             <div class="hamburger" id="hamburger">
                 <span></span>
@@ -63,7 +63,7 @@
                 </h1>
                 <p class="hero-subtitle">Premium grooming experience with master barbers</p>
                 <div class="hero-cta">
-                    <a href="booking.html" class="glow-button">
+                    <a href="booking.php" class="glow-button">
                         <span>Book Appointment</span>
                         <i class="fas fa-calendar-alt"></i>
                     </a>
@@ -96,8 +96,8 @@
                             </div>
                         </div>
                         <div class="about-cta">
-                            <a href="services.html" class="btn-primary">Explore Services</a>
-                            <a href="barbers.html" class="btn-secondary">Meet Our Team</a>
+                            <a href="services.php" class="btn-primary">Explore Services</a>
+                            <a href="barbers.php" class="btn-secondary">Meet Our Team</a>
                         </div>
                     </div>
                     <div class="about-image">
@@ -193,11 +193,11 @@
                     <h2>Ready for Your Best Look Yet?</h2>
                     <p>Join thousands of satisfied clients who trust Hair Cutting Hub for their grooming needs. Book your appointment today and experience the difference.</p>
                     <div class="cta-buttons">
-                        <a href="booking.html" class="glow-button">
+                        <a href="booking.php" class="glow-button">
                             <span>Book Now</span>
                             <i class="fas fa-calendar-alt"></i>
                         </a>
-                        <a href="gallery.html" class="btn-outline">
+                        <a href="gallery.php" class="btn-outline">
                             <span>View Gallery</span>
                             <i class="fas fa-images"></i>
                         </a>

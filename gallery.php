@@ -23,14 +23,14 @@
                 <span>Hair Cutting Hub</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="barbers.html" class="nav-link">Barbers</a></li>
-                <li><a href="booking.html" class="nav-link">Booking</a></li>
-                <li><a href="gallery.html" class="nav-link active">Gallery</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-                <li><a href="theme-selector.html" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
-                <li><a href="login.html" class="nav-link login-link">Login</a></li>
+                <li><a href="index.php" class="nav-link">Home</a></li>
+                <li><a href="services.php" class="nav-link">Services</a></li>
+                <li><a href="barbers.php" class="nav-link">Barbers</a></li>
+                <li><a href="booking.php" class="nav-link">Booking</a></li>
+                <li><a href="gallery.php" class="nav-link active">Gallery</a></li>
+                <li><a href="contact.php" class="nav-link">Contact</a></li>
+                <li><a href="theme-selector.php" class="nav-link theme-btn"><i class="fas fa-palette"></i> Themes</a></li>
+                <li><a href="login.php" class="nav-link login-link">Login</a></li>
             </ul>
         </div>
     </nav>

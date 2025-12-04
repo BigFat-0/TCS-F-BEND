@@ -39,8 +39,8 @@
     <div class="test-card">
         <h2>Login Page Test</h2>
         <p>Click below to test login page:</p>
-        <button class="test-btn" onclick="window.location.href='auth.html'">Open Login Page</button>
-        <button class="test-btn" onclick="window.location.href='index.html'">Back to Home</button>
+        <button class="test-btn" onclick="window.location.href='auth.php'">Open Login Page</button>
+        <button class="test-btn" onclick="window.location.href='index.php'">Back to Home</button>
         
         <div style="margin-top: 20px; font-size: 14px; color: #666;">
             <p><strong>Demo Credentials:</strong></p>

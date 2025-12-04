@@ -12,11 +12,11 @@
         <div class="nav-container">
             <div class="logo">Hair Cutting Hub</div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="booking.html" class="nav-link">Book Now</a></li>
-                <li><a href="about.html" class="nav-link active">About</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="index.php" class="nav-link">Home</a></li>
+                <li><a href="services.php" class="nav-link">Services</a></li>
+                <li><a href="booking.php" class="nav-link">Book Now</a></li>
+                <li><a href="about.php" class="nav-link active">About</a></li>
+                <li><a href="contact.php" class="nav-link">Contact</a></li>
             </ul>
             <div class="hamburger">
                 <span></span>

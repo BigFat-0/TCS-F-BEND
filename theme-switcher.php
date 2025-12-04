@@ -161,7 +161,7 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">
+    <a href="index.php" class="back-btn">
         <i class="fas fa-arrow-left"></i> Back to Website
     </a>
 
@@ -274,7 +274,7 @@
             alert(`${themeName.replace('-', ' ').toUpperCase()} theme will be applied! Redirecting to website...`);
             
             // Redirect to main website
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         }
     </script>
 </body>

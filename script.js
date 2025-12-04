@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSmoothScrolling();
     initializeAnimations();
     setCurrentYear();
+    initializeBookingWizard();
 });
 
 // Navigation functionality
@@ -141,26 +142,6 @@ function setCurrentYear() {
     }
 }
 
-// Service booking functionality
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('book-service-btn')) {
-        const serviceCard = e.target.closest('.service-card');
-        const serviceName = serviceCard.querySelector('h3').textContent;
-        
-        // Scroll to booking section
-        const bookingSection = document.getElementById('booking');
-        if (bookingSection) {
-            bookingSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-        
-        // Show notification
-        showNotification(`Selected: ${serviceName}. Please scroll to booking section.`, 'success');
-    }
-});
-
 // Notification system
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
@@ -202,35 +183,13 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Parallax effect for hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const heroBg = document.querySelector('.hero-bg');
-    if (heroBg) {
-        heroBg.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
-
-// Add loading animation to buttons
-document.querySelectorAll('.glow-button, .book-service-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const originalText = this.textContent;
-        this.style.pointerEvents = 'none';
-        this.style.opacity = '0.7';
-        
-        setTimeout(() => {
-            this.textContent = originalText;
-            this.style.pointerEvents = 'auto';
-            this.style.opacity = '1';
-        }, 1000);
-    });
-});
-
 // Booking Wizard Functionality
 function initializeBookingWizard() {
     let currentStep = 1;
     const totalSteps = 5;
     let bookingData = {};
+    let services = [];
+    let staff = [];
 
     const steps = document.querySelectorAll('.booking-step');
     const stepIndicators = document.querySelectorAll('.step');
@@ -241,24 +200,61 @@ function initializeBookingWizard() {
 
     if (!steps.length) return; // Exit if booking wizard not found
 
-    // Service selection
-    document.querySelectorAll('.service-option').forEach(option => {
-        option.addEventListener('click', () => {
-            document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
-            option.classList.add('selected');
-            bookingData.service = option.dataset.service;
-            bookingData.price = option.dataset.price;
-        });
+    // Fetch services and staff
+    Promise.all([
+        fetch('api_services.php').then(res => res.json()),
+        fetch('api_staff.php').then(res => res.json())
+    ]).then(([servicesData, staffData]) => {
+        services = servicesData;
+        staff = staffData;
+        populateServices();
+        populateStaff();
+    }).catch(error => {
+        console.error('Error fetching initial data:', error);
+        showNotification('Could not load booking options. Please refresh the page.', 'error');
     });
 
-    // Barber selection
-    document.querySelectorAll('.barber-option').forEach(option => {
-        option.addEventListener('click', () => {
-            document.querySelectorAll('.barber-option').forEach(o => o.classList.remove('selected'));
-            option.classList.add('selected');
-            bookingData.barber = option.dataset.barber;
+    function populateServices() {
+        const container = document.querySelector('.service-options');
+        container.innerHTML = services.map(service => `
+            <div class="service-option" data-service-id="${service.id}" data-price="${service.price}" data-service-name="${service.name}">
+                <i class="fas fa-cut"></i>
+                <span>${service.name} - $${service.price}</span>
+            </div>
+        `).join('');
+
+        // Re-attach event listeners
+        document.querySelectorAll('.service-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                bookingData.service_id = option.dataset.serviceId;
+                bookingData.price_charged = option.dataset.price;
+                bookingData.service_name = option.dataset.serviceName;
+            });
         });
-    });
+    }
+
+    function populateStaff() {
+        const container = document.querySelector('.barber-options');
+        container.innerHTML = staff.map(member => `
+            <div class="barber-option" data-staff-id="${member.id}" data-staff-name="${member.name}">
+                <div class="barber-avatar"><i class="fas fa-user"></i></div>
+                <span>${member.name}</span>
+            </div>
+        `).join('');
+
+        // Re-attach event listeners
+        document.querySelectorAll('.barber-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.barber-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                bookingData.staff_id = option.dataset.staffId;
+                bookingData.staff_name = option.dataset.staffName;
+            });
+        });
+    }
+
 
     // Date selection
     const dateInput = document.getElementById('booking-date');
@@ -266,7 +262,7 @@ function initializeBookingWizard() {
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('min', today);
         dateInput.addEventListener('change', () => {
-            bookingData.date = dateInput.value;
+            bookingData.booking_date = dateInput.value;
         });
     }
 
@@ -275,7 +271,7 @@ function initializeBookingWizard() {
         slot.addEventListener('click', () => {
             document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
             slot.classList.add('selected');
-            bookingData.time = slot.dataset.time;
+            bookingData.booking_time = slot.dataset.time;
         });
     });
 
@@ -285,7 +281,11 @@ function initializeBookingWizard() {
         const input = document.getElementById(inputId);
         if (input) {
             input.addEventListener('input', () => {
-                const key = inputId.replace('customer-', '');
+                let key = inputId.replace('customer-', '');
+                if (key === 'name') key = 'customer_name';
+                if (key === 'phone') key = 'customer_phone';
+                if (key === 'email') key = 'customer_email';
+                if (key === 'notes') key = 'notes';
                 bookingData[key] = input.value;
             });
         }
@@ -358,25 +358,25 @@ function initializeBookingWizard() {
     function validateStep(step) {
         switch (step) {
             case 1:
-                if (!bookingData.service) {
+                if (!bookingData.service_id) {
                     showNotification('Please select a service', 'error');
                     return false;
                 }
                 break;
             case 2:
-                if (!bookingData.barber) {
+                if (!bookingData.staff_id) {
                     showNotification('Please choose a barber', 'error');
                     return false;
                 }
                 break;
             case 3:
-                if (!bookingData.date || !bookingData.time) {
+                if (!bookingData.booking_date || !bookingData.booking_time) {
                     showNotification('Please select date and time', 'error');
                     return false;
                 }
                 break;
             case 4:
-                if (!bookingData.name || !bookingData.phone || !bookingData.email) {
+                if (!bookingData.customer_name || !bookingData.customer_phone || !bookingData.customer_email) {
                     showNotification('Please fill in all required fields', 'error');
                     return false;
                 }
@@ -391,44 +391,60 @@ function initializeBookingWizard() {
         const summaryDatetime = document.getElementById('summary-datetime');
         const summaryTotal = document.getElementById('summary-total');
 
-        if (summaryService) summaryService.textContent = bookingData.service || '-';
-        if (summaryBarber) summaryBarber.textContent = bookingData.barber || '-';
-        
-        if (bookingData.date && bookingData.time && summaryDatetime) {
-            const date = new Date(bookingData.date);
-            const formattedDate = date.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+        if (summaryService) summaryService.textContent = bookingData.service_name || '-';
+        if (summaryBarber) summaryBarber.textContent = bookingData.staff_name || '-';
+
+        if (bookingData.booking_date && bookingData.booking_time && summaryDatetime) {
+            const date = new Date(bookingData.booking_date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
-            const time = formatTime(bookingData.time);
+            const time = formatTime(bookingData.booking_time);
             summaryDatetime.textContent = `${formattedDate} at ${time}`;
         }
-        
-        if (summaryTotal) summaryTotal.textContent = `$${bookingData.price || '0'}`;
+
+        if (summaryTotal) summaryTotal.textContent = `$${bookingData.price_charged || '0'}`;
     }
 
     function confirmBooking() {
-        // Generate booking ID
-        const bookingId = 'HCH' + Date.now().toString().slice(-6);
-        
-        // Show success modal
-        const bookingIdElement = document.getElementById('booking-id');
-        const successModal = document.getElementById('success-modal');
-        
-        if (bookingIdElement) bookingIdElement.textContent = bookingId;
-        if (successModal) successModal.style.display = 'block';
-        
-        // Send email notification
-        sendEmailNotification(bookingData, bookingId);
-        
-        // Reset wizard after delay
-        setTimeout(() => {
-            resetWizard();
-        }, 3000);
-    }
+        fetch('api_save_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookingData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const bookingId = 'HCH' + Date.now().toString().slice(-6);
 
+                const bookingIdElement = document.getElementById('booking-id');
+                const successModal = document.getElementById('success-modal');
+
+                if (bookingIdElement) bookingIdElement.textContent = bookingId;
+                if (successModal) successModal.style.display = 'block';
+
+                showNotification('Booking successful!', 'success');
+
+                setTimeout(() => {
+                    resetWizard();
+                    if (successModal) successModal.style.display = 'none';
+                }, 4000);
+
+            } else {
+                showNotification('Booking failed: ' + data.error, 'error');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            showNotification('An error occurred. Please try again.', 'error');
+        });
+    }
+    
     function resetWizard() {
         currentStep = 1;
         bookingData = {};
@@ -436,7 +452,9 @@ function initializeBookingWizard() {
         
         // Clear all selections and inputs
         document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-        document.querySelectorAll('input, textarea').forEach(input => input.value = '');
+        // Re-populate services and staff in case they were removed
+        populateServices();
+        populateStaff();
     }
 
     function formatTime(time) {
@@ -445,25 +463,6 @@ function initializeBookingWizard() {
         const ampm = hour >= 12 ? 'PM' : 'AM';
         const displayHour = hour % 12 || 12;
         return `${displayHour}:${minutes} ${ampm}`;
-    }
-
-    function sendEmailNotification(data, bookingId) {
-        const subject = `New Booking Request - ${data.name}`;
-        const body = `New booking request received:
-
-Booking ID: ${bookingId}
-Service: ${data.service}
-Barber: ${data.barber}
-Date: ${new Date(data.date).toLocaleDateString()}
-Time: ${data.time}
-Customer: ${data.name}
-Phone: ${data.phone}
-Email: ${data.email}
-Notes: ${data.notes || 'None'}
-Total: $${data.price}`;
-        
-        const mailtoLink = `mailto:barbershop@haircuttinghub.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.open(mailtoLink);
     }
 
     // Initialize wizard
@@ -477,61 +476,3 @@ function closeModal() {
         modal.style.display = 'none';
     }
 }
-
-// Enhanced hover effects for service cards
-document.querySelectorAll('.service-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-10px) scale(1.02)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Smooth reveal animations for sections
-function revealOnScroll() {
-    const reveals = document.querySelectorAll('.section-header, .service-card, .stat-card, .barber-card');
-    
-    reveals.forEach(element => {
-        const windowHeight = window.innerHeight;
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-        
-        if (elementTop < windowHeight - elementVisible) {
-            element.classList.add('revealed');
-        }
-    });
-}
-
-window.addEventListener('scroll', revealOnScroll);
-
-// Add reveal animation styles
-const revealStyle = document.createElement('style');
-revealStyle.textContent = `
-    .section-header,
-    .service-card,
-    .stat-card,
-    .barber-card {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.6s ease-out;
-    }
-    
-    .section-header.revealed,
-    .service-card.revealed,
-    .stat-card.revealed,
-    .barber-card.revealed {
-        opacity: 1;
-        transform: translateY(0);
-    }
-`;
-document.head.appendChild(revealStyle);
-
-// Initialize reveal animation
-revealOnScroll();
-
-// Initialize booking wizard when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeBookingWizard();
-});

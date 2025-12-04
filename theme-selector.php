@@ -141,7 +141,7 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">
+    <a href="index.php" class="back-btn">
         <i class="fas fa-arrow-left"></i> Back to Website
     </a>
 
@@ -250,7 +250,7 @@
             if (themeName === 'default') {
                 localStorage.removeItem('selectedTheme');
                 alert('Default theme applied! Redirecting to website...');
-                window.location.href = 'index.html';
+                window.location.href = 'index.php';
                 return;
             }
             
@@ -270,7 +270,7 @@
             alert(`${themeNames[themeName]} theme applied! Redirecting to website...`);
             
             // Redirect to main website
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         }
     </script>
 </body>
