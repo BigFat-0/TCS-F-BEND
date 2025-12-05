@@ -14,15 +14,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "All fields are required.";
     } else {
         $user_id = $_SESSION['user_id'];
-        // Default status is 'awaiting_quote' per schema default
-        $sql = "INSERT INTO bookings (user_id, job_description, service_address, scheduled_date, created_at) VALUES (?, ?, ?, ?, NOW())";
+        // Status defaults to 'awaiting_quote'
+        $sql = "INSERT INTO bookings (user_id, job_description, service_address, scheduled_date) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
 
         if ($stmt->execute([$user_id, $job_description, $service_address, $scheduled_date])) {
             header("Location: dashboard.php");
             exit();
         } else {
-            $message = "Failed to submit request.";
+            $message = "Failed to submit request. Please try again.";
         }
     }
 }
@@ -31,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Request Quote - Cleaning Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>

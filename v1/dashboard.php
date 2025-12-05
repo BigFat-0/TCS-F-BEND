@@ -5,7 +5,7 @@ require('db_connect.php');
 
 $user_id = $_SESSION['user_id'];
 
-// Handle Actions (Accept/Reject)
+// Handle Customer Actions (Accept/Reject Quote)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST['action'])) {
     $booking_id = $_POST['booking_id'];
     $action = $_POST['action'];
@@ -18,9 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
     }
 
     if ($new_status) {
-        $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ? AND user_id = ?");
+        // Verify ownership and current status before updating
+        $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ? AND user_id = ? AND status = 'quoted'");
         $stmt->execute([$new_status, $booking_id, $user_id]);
-        header("Location: dashboard.php"); // Refresh to show changes
+        header("Location: dashboard.php"); 
         exit();
     }
 }
@@ -34,7 +35,6 @@ $bookings = $stmt->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Cleaning Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -49,11 +49,11 @@ $bookings = $stmt->fetchAll();
             <table>
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th>Date Scheduled</th>
                         <th>Description</th>
                         <th>Address</th>
                         <th>Status</th>
-                        <th>Quote</th>
+                        <th>Quote / Bill</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -63,11 +63,17 @@ $bookings = $stmt->fetchAll();
                             <td><?php echo htmlspecialchars($booking['scheduled_date']); ?></td>
                             <td><?php echo htmlspecialchars($booking['job_description']); ?></td>
                             <td><?php echo htmlspecialchars($booking['service_address']); ?></td>
-                            <td><span class="status-badge status-<?php echo $booking['status']; ?>"><?php echo htmlspecialchars($booking['status']); ?></span></td>
+                            <td>
+                                <span class="status-badge status-<?php echo $booking['status']; ?>">
+                                    <?php echo ucfirst(str_replace('_', ' ', $booking['status'])); ?>
+                                </span>
+                            </td>
                             <td>
                                 <?php 
-                                    if ($booking['status'] == 'quoted' || $booking['status'] == 'confirmed' || $booking['status'] == 'completed') {
+                                    if ($booking['status'] == 'quoted' || $booking['status'] == 'confirmed') {
                                         echo '$' . htmlspecialchars($booking['quoted_price']);
+                                    } elseif ($booking['status'] == 'completed') {
+                                        echo 'Final Bill: $' . htmlspecialchars($booking['actual_bill']);
                                     } else {
                                         echo '-';
                                     }
@@ -77,13 +83,17 @@ $bookings = $stmt->fetchAll();
                                 <?php if ($booking['status'] == 'quoted'): ?>
                                     <form method="post" style="display:inline;">
                                         <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
-                                        <button type="submit" name="action" value="accept" class="btn btn-success" style="padding: 5px 10px; font-size: 14px;">Accept</button>
-                                        <button type="submit" name="action" value="reject" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Reject</button>
+                                        <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
                                     </form>
                                 <?php elseif ($booking['status'] == 'confirmed'): ?>
-                                    <span>Job Scheduled</span>
+                                    <span>Job Confirmed</span>
                                 <?php elseif ($booking['status'] == 'completed'): ?>
-                                    <span>Billed: $<?php echo htmlspecialchars($booking['actual_bill']); ?></span>
+                                    <span>Completed</span>
+                                <?php elseif ($booking['status'] == 'rejected'): ?>
+                                    <span>Rejected</span>
+                                <?php else: ?>
+                                    <span>Pending</span>
                                 <?php endif; ?>
                             </td>
                         </tr>

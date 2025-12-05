@@ -9,31 +9,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone_number']);
     $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-
+    
+    // Basic validation
     if (empty($email) || empty($phone) || empty($password)) {
         $message = "All fields are required.";
-    } elseif ($password !== $confirm_password) {
-        $message = "Passwords do not match.";
     } else {
-        // Check if email already exists
+        // Check if email exists
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         
         if ($stmt->rowCount() > 0) {
-            $message = "Email already exists.";
+            $message = "Email already registered.";
         } else {
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            $role = 'customer'; // Default role
+            $role = 'customer'; 
 
-            $sql = "INSERT INTO users (email, phone_number, password_hash, role, created_at) VALUES (?, ?, ?, ?, NOW())";
+            $sql = "INSERT INTO users (email, phone_number, password_hash, role) VALUES (?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             
             if ($stmt->execute([$email, $phone, $password_hash, $role])) {
                  header("Location: login.php");
                  exit();
             } else {
-                $message = "Registration failed.";
+                $message = "Registration failed. Please try again.";
             }
         }
     }
@@ -43,13 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Cleaning Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h2>Register</h2>
+        <h2>Customer Registration</h2>
         <?php if ($message): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
@@ -59,19 +56,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" name="email" required>
             </div>
             <div class="form-group">
-                <label>Phone Number (Mandatory)</label>
+                <label>Phone Number</label>
                 <input type="text" name="phone_number" required>
             </div>
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" required>
             </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" name="confirm_password" required>
-            </div>
             <button type="submit">Register</button>
-            <a href="login.php" class="btn btn-secondary">Login</a>
+            <a href="login.php" class="btn btn-secondary">Already have an account? Login</a>
         </form>
     </div>
 </body>
