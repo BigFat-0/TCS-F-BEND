@@ -3,8 +3,8 @@
 
 $host = 'h880oo80sksccwgggk8okwkk';
 $db   = 'default';
-$user = 'user1';
-$pass = 'KIS710SnmXeRMVqv6zhJO4gzkvUUG1qLyO1n8Rn0HkNFAMAnf3OoqOcWGjdfdVvQ';
+$user = 'mysql';
+$pass = 'SO16QPNRh3FeSHnDCsTXHIcXMjHDXwTXELh3kZ5FWN2vP1GB7IIpVtBHiXfQX10M';
 $port = "3306";
 $charset = 'utf8mb4';
 
