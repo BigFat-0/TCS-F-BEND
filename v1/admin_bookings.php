@@ -31,11 +31,14 @@ if (isset($_GET['delete_id'])) {
 }
 
 // Fetch All Bookings
-$stmt = $pdo->query("SELECT b.*, u.email, u.phone_number FROM bookings b JOIN users u ON b.user_id = u.id ORDER BY b.created_at DESC");
+$stmt = $pdo->query("SELECT b.*, u.first_name, u.last_name, u.email, u.phone_number 
+                     FROM bookings b 
+                     JOIN users u ON b.user_id = u.id 
+                     ORDER BY b.created_at DESC");
 $bookings = $stmt->fetchAll();
 
 // Fetch Users for Dropdown
-$users = $pdo->query("SELECT id, email FROM users ORDER BY email ASC")->fetchAll();
+$users = $pdo->query("SELECT id, first_name, last_name, email FROM users ORDER BY first_name ASC")->fetchAll();
 
 $show_create_form = isset($_GET['action']) && $_GET['action'] === 'create';
 ?>
@@ -63,7 +66,9 @@ $show_create_form = isset($_GET['action']) && $_GET['action'] === 'create';
                     <select name="user_id" class="form-control" required>
                         <option value="">-- Select Client --</option>
                         <?php foreach ($users as $u): ?>
-                            <option value="<?php echo $u['id']; ?>"><?php echo htmlspecialchars($u['email']); ?></option>
+                            <option value="<?php echo $u['id']; ?>">
+                                <?php echo htmlspecialchars($u['first_name'] . ' ' . $u['last_name'] . ' (' . $u['email'] . ')'); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -96,6 +101,7 @@ $show_create_form = isset($_GET['action']) && $_GET['action'] === 'create';
                     <th>Status</th>
                     <th>Quoted</th>
                     <th>Bill</th>
+                    <th>Created At</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -104,18 +110,19 @@ $show_create_form = isset($_GET['action']) && $_GET['action'] === 'create';
                 <tr>
                     <td>#<?php echo $b['id']; ?></td>
                     <td>
-                        <?php echo htmlspecialchars($b['email']); ?><br>
+                        <?php echo htmlspecialchars($b['first_name'] . ' ' . $b['last_name']); ?><br>
                         <small><?php echo htmlspecialchars($b['phone_number']); ?></small>
                     </td>
                     <td><?php echo date('M d, H:i', strtotime($b['scheduled_date'])); ?></td>
                     <td><?php echo htmlspecialchars($b['service_address']); ?></td>
                     <td>
                         <span class="badge badge-<?php echo $b['status']; ?>">
-                            <?php echo ucfirst($b['status']); ?>
+                            <?php echo ucwords(str_replace('_', ' ', $b['status'])); ?>
                         </span>
                     </td>
                     <td><?php echo $b['quoted_price'] ? '$'.$b['quoted_price'] : '-'; ?></td>
                     <td><?php echo $b['actual_bill'] ? '<strong>$'.$b['actual_bill'].'</strong>' : '-'; ?></td>
+                    <td><?php echo date('M d', strtotime($b['created_at'])); ?></td>
                     <td>
                         <a href="admin_booking_edit.php?id=<?php echo $b['id']; ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                         <a href="?delete_id=<?php echo $b['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this booking?');"><i class="fas fa-trash"></i></a>
