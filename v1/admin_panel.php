@@ -5,7 +5,7 @@ require_once 'admin_header.php';
 
 // Today's Bookings
 $today = date('Y-m-d');
-$stmt = $pdo->prepare("SELECT b.*, u.email FROM bookings b JOIN users u ON b.user_id = u.id WHERE DATE(scheduled_date) = ? ORDER BY scheduled_date ASC");
+$stmt = $pdo->prepare("SELECT b.*, u.email, u.last_name FROM bookings b JOIN users u ON b.user_id = u.id WHERE DATE(scheduled_date) = ? ORDER BY scheduled_date ASC");
 $stmt->execute([$today]);
 $todays_bookings = $stmt->fetchAll();
 
@@ -29,16 +29,19 @@ $recent_requests = $stmt->fetchAll();
                         <thead>
                             <tr>
                                 <th>Time</th>
-                                <th>User</th>
-                                <th>Status</th>
+                                <th>Client</th>
+                                <th class="d-none-mobile">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php foreach ($todays_bookings as $b): ?>
-                            <tr>
+                            <tr class="clickable-row" onclick="window.location='admin_booking_edit.php?id=<?php echo $b['id']; ?>'">
                                 <td><strong><?php echo date('H:i', strtotime($b['scheduled_date'])); ?></strong></td>
-                                <td><?php echo htmlspecialchars($b['email']); ?></td>
-                                <td><span class="status-badge status-<?php echo $b['status']; ?>"><?php echo $b['status']; ?></span></td>
+                                <td>
+                                    <?php echo htmlspecialchars($b['last_name']); ?>
+                                    <small class="d-none-mobile" style="display:block; color:var(--text-light);"><?php echo htmlspecialchars($b['email']); ?></small>
+                                </td>
+                                <td class="d-none-mobile"><span class="status-badge status-<?php echo $b['status']; ?>"><?php echo $b['status']; ?></span></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>

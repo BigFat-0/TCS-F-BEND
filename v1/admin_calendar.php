@@ -14,13 +14,20 @@ require_once 'admin_header.php';
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
+    var isMobile = window.innerWidth < 768;
+    
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
+        initialView: isMobile ? 'listWeek' : 'dayGridMonth',
+        headerToolbar: isMobile ? {
+            left: 'prev,next',
+            center: 'title',
+            right: 'listWeek,timeGridDay'
+        } : {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
+        height: 'auto',
         events: 'api_calendar.php',
         eventClick: function(info) {
             if (info.event.url) {

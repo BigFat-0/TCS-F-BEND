@@ -93,38 +93,38 @@ $show_create = isset($_GET['action']) && $_GET['action'] == 'create';
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th class="d-none-mobile">ID</th>
                     <th>Customer Name</th>
                     <th>Date</th>
-                    <th>Address</th>
+                    <th class="d-none-mobile">Address</th>
                     <th>Status</th>
-                    <th>Quoted</th>
-                    <th>Bill</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
+                    <th class="d-none-mobile">Quoted</th>
+                    <th class="d-none-mobile">Bill</th>
+                    <th class="d-none-mobile">Created At</th>
+                    <th class="d-none-mobile">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($bookings as $b): ?>
-                <tr>
-                    <td>#<?php echo $b['id']; ?></td>
+                <tr class="clickable-row" onclick="window.location='admin_booking_edit.php?id=<?php echo $b['id']; ?>'">
+                    <td class="d-none-mobile">#<?php echo $b['id']; ?></td>
                     <td>
                         <?php echo htmlspecialchars($b['first_name'] . ' ' . $b['last_name']); ?><br>
                         <small><?php echo htmlspecialchars($b['phone_number']); ?></small>
                     </td>
                     <td><?php echo date('M d, H:i', strtotime($b['scheduled_date'])); ?></td>
-                    <td><?php echo htmlspecialchars($b['service_address']); ?></td>
+                    <td class="d-none-mobile"><?php echo htmlspecialchars($b['service_address']); ?></td>
                     <td>
                         <span class="badge badge-<?php echo $b['status']; ?>">
                             <?php echo ucwords(str_replace('_', ' ', $b['status'])); ?>
                         </span>
                     </td>
-                    <td><?php echo $b['quoted_price'] ? '$'.$b['quoted_price'] : '-'; ?></td>
-                    <td><?php echo $b['actual_bill'] ? '<strong>$'.$b['actual_bill'].'</strong>' : '-'; ?></td>
-                    <td><?php echo date('d M Y', strtotime($b['created_at'])); ?></td>
-                    <td>
-                        <a href="admin_booking_edit.php?id=<?php echo $b['id']; ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                        <a href="?delete_id=<?php echo $b['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete?');"><i class="fas fa-trash"></i></a>
+                    <td class="d-none-mobile"><?php echo $b['quoted_price'] ? '$'.$b['quoted_price'] : '-'; ?></td>
+                    <td class="d-none-mobile"><?php echo $b['actual_bill'] ? '<strong>$'.$b['actual_bill'].'</strong>' : '-'; ?></td>
+                    <td class="d-none-mobile"><?php echo date('d M Y', strtotime($b['created_at'])); ?></td>
+                    <td class="d-none-mobile">
+                        <a href="admin_booking_edit.php?id=<?php echo $b['id']; ?>" class="btn btn-sm btn-primary" onclick="event.stopPropagation();"><i class="fas fa-edit"></i></a>
+                        <a href="?delete_id=<?php echo $b['id']; ?>" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); return confirm('Delete?');"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

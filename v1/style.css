@@ -245,6 +245,9 @@ th {
     /* Container padding */
     .container, .admin-main { padding: var(--spacing-md); }
 
+    /* Utility to hide elements on mobile */
+    .d-none-mobile { display: none !important; }
+
     /* Card View for Tables on Mobile (Optional, strict horizontal scroll is safer for data density, staying with .table-responsive for now) */
     
     /* Modals */
@@ -252,6 +255,26 @@ th {
         width: 95%;
         margin: 10% auto;
     }
+
+    /* FullCalendar Mobile Fixes */
+    #calendar {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .fc-toolbar {
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+    }
+}
+
+/* Interaction */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+.clickable-row:hover {
+    background-color: rgba(0,0,0,0.02);
 }
 
 /* Modal Styles */

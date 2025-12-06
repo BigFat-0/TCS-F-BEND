@@ -235,10 +235,16 @@ $bookings = $stmt->fetchAll();
         var calendar;
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
+            var isMobile = window.innerWidth < 768;
+            
             calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                initialView: isMobile ? 'listWeek' : 'dayGridMonth',
                 events: 'api_customer_calendar.php',
-                headerToolbar: {
+                headerToolbar: isMobile ? {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'listWeek'
+                } : {
                     left: 'prev,next',
                     center: 'title',
                     right: 'dayGridMonth,listMonth'
