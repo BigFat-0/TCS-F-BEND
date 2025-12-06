@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
     <title>Admin Panel - Cleaning Services</title>
     
     <!-- Styles -->
-    <link rel="stylesheet" href="admin_style.css">
+    <link rel="stylesheet" href="style.css">
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,13 +35,16 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
     <div class="admin-brand">
         <i class="fas fa-broom"></i> CleanAdmin
     </div>
+    <div class="nav-toggle" onclick="document.querySelector('.admin-nav').classList.toggle('active')">
+        <i class="fas fa-bars"></i>
+    </div>
     <nav class="admin-nav">
         <a href="admin_panel.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="admin_calendar.php"><i class="fas fa-calendar-alt"></i> Calendar</a>
         <a href="admin_revenue.php"><i class="fas fa-chart-line"></i> Revenue</a>
         <a href="admin_users.php"><i class="fas fa-users"></i> Users</a>
         <a href="admin_bookings.php"><i class="fas fa-list"></i> Bookings</a>
-        <a href="admin_bookings.php?action=create" class="btn-new-booking"><i class="fas fa-plus"></i> New Booking</a>
+        <a href="admin_bookings.php?action=create" class="btn-new-booking"><i class="fas fa-plus"></i> New</a>
         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </nav>
 </header>

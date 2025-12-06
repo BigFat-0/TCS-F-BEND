@@ -14,52 +14,66 @@ $stmt = $pdo->query("SELECT b.*, u.email FROM bookings b JOIN users u ON b.user_
 $recent_requests = $stmt->fetchAll();
 ?>
 
-<div class="admin-container">
-    <div class="page-header">
+<div class="admin-main">
+    <div class="page-header" style="margin-bottom: var(--spacing-lg);">
         <h1>Dashboard Overview</h1>
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card" style="grid-column: span 2;">
-            <h3>Today's Schedule (<?php echo date('M d'); ?>)</h3>
+        <!-- Today's Schedule -->
+        <div class="stat-card" style="grid-column: span 2; border-left-color: var(--accent-color);">
+            <h3><i class="fas fa-calendar-day"></i> Today's Schedule (<?php echo date('M d'); ?>)</h3>
             <?php if (count($todays_bookings) > 0): ?>
-                <ul>
-                    <?php foreach ($todays_bookings as $b): ?>
-                        <li style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                            <strong><?php echo date('H:i', strtotime($b['scheduled_date'])); ?></strong> - 
-                            <?php echo htmlspecialchars($b['email']); ?>
-                            <span class="badge badge-<?php echo $b['status']; ?>" style="float:right;"><?php echo $b['status']; ?></span>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>User</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($todays_bookings as $b): ?>
+                            <tr>
+                                <td><strong><?php echo date('H:i', strtotime($b['scheduled_date'])); ?></strong></td>
+                                <td><?php echo htmlspecialchars($b['email']); ?></td>
+                                <td><span class="status-badge status-<?php echo $b['status']; ?>"><?php echo $b['status']; ?></span></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php else: ?>
-                <p style="color: #7f8c8d;">No bookings scheduled for today.</p>
+                <p style="color: var(--text-light); padding: 10px 0;">No bookings scheduled for today.</p>
             <?php endif; ?>
-            <a href="admin_calendar.php" class="btn btn-sm btn-primary" style="margin-top: 10px;">View Calendar</a>
+            <a href="admin_calendar.php" class="btn btn-sm btn-primary" style="margin-top: 10px;"><i class="fas fa-calendar-alt"></i> View Calendar</a>
         </div>
 
-        <div class="stat-card">
-            <h3>Recent Requests</h3>
+        <!-- Recent Requests -->
+        <div class="stat-card" style="border-left-color: var(--secondary-color);">
+            <h3><i class="fas fa-clock"></i> Recent Requests</h3>
             <?php if (count($recent_requests) > 0): ?>
-                <ul>
+                <ul style="list-style: none; padding: 0;">
                     <?php foreach ($recent_requests as $r): ?>
-                        <li style="margin-bottom: 10px;">
-                            #<?php echo $r['id']; ?> - <?php echo htmlspecialchars($r['email']); ?>
-                            <br>
-                            <a href="admin_booking_edit.php?id=<?php echo $r['id']; ?>" style="font-size: 0.85em;">Review</a>
+                        <li style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>#<?php echo $r['id']; ?> - <small><?php echo htmlspecialchars($r['email']); ?></small></span>
+                                <a href="admin_booking_edit.php?id=<?php echo $r['id']; ?>" class="btn btn-sm btn-primary">Review</a>
+                            </div>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <p style="color: #7f8c8d;">No pending requests.</p>
+                <p style="color: var(--text-light);">No pending requests.</p>
             <?php endif; ?>
         </div>
     </div>
     
     <!-- Quick Links -->
-    <div style="display: flex; gap: 10px;">
-        <a href="admin_bookings.php?action=create" class="btn btn-primary">Create Booking</a>
-        <a href="admin_users.php" class="btn btn-primary">Manage Users</a>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="admin_bookings.php?action=create" class="btn btn-primary"><i class="fas fa-plus"></i> Create Booking</a>
+        <a href="admin_users.php" class="btn btn-secondary"><i class="fas fa-users"></i> Manage Users</a>
     </div>
 
 </div>

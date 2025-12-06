@@ -1,150 +1,300 @@
+:root {
+    /* Colors */
+    --primary-color: #2c3e50; /* Navy Blue */
+    --secondary-color: #f1c40f; /* Gold */
+    --accent-color: #3498db; /* Blue */
+    --background-color: #f4f4f9;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --text-light: #7f8c8d;
+    --border-color: #dddddd;
+
+    /* Status Colors */
+    --status-success-bg: #d4edda;
+    --status-success-text: #155724;
+    --status-warning-bg: #ffeeba;
+    --status-warning-text: #856404;
+    --status-danger-bg: #f8d7da;
+    --status-danger-text: #721c24;
+    --status-info-bg: #bee5eb;
+    --status-info-text: #0c5460;
+
+    /* Spacing */
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    
+    /* Layout */
+    --sidebar-width: 250px;
+    --header-height: 60px;
+}
+
+/* Base Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     margin: 0;
-    padding: 20px;
+    padding: 0;
     line-height: 1.6;
 }
 
-h1, h2, h3 {
-    color: #2c3e50;
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    margin-top: 0;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* Layout Grid */
+.admin-wrapper {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="date"],
-input[type="datetime-local"],
-textarea,
-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-button, .btn {
-    display: inline-block;
-    background-color: #3498db;
+.admin-sidebar {
+    background-color: var(--primary-color);
     color: #fff;
-    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-main {
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+}
+
+/* Customer Layout (Single Column Centered) */
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    background: var(--card-background);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Components */
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px; /* Ample touch target */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
     font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s;
 }
 
-button:hover, .btn:hover {
-    background-color: #2980b9;
+.btn-primary { background-color: var(--accent-color); color: #fff; }
+.btn-primary:hover { background-color: #2980b9; }
+
+.btn-secondary { background-color: #95a5a6; color: #fff; }
+.btn-secondary:hover { background-color: #7f8c8d; }
+
+.btn-success { background-color: #27ae60; color: #fff; }
+.btn-success:hover { background-color: #2ecc71; }
+
+.btn-danger { background-color: #e74c3c; color: #fff; }
+.btn-danger:hover { background-color: #c0392b; }
+
+.btn-sm { padding: 5px 10px; font-size: 14px; }
+
+/* Forms */
+.form-group { margin-bottom: var(--spacing-md); }
+label { display: block; margin-bottom: 5px; font-weight: bold; }
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px; /* Prevent zoom on iOS */
 }
 
-.btn-secondary {
-    background-color: #95a5a6;
-}
-
-.btn-secondary:hover {
-    background-color: #7f8c8d;
-}
-
-.btn-danger {
-    background-color: #e74c3c;
-}
-
-.btn-danger:hover {
-    background-color: #c0392b;
-}
-
-.btn-success {
-    background-color: #27ae60;
-}
-
-.btn-success:hover {
-    background-color: #2ecc71;
+/* Tables */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
+    min-width: 600px; /* Force scroll on small screens */
 }
 
 th, td {
     padding: 12px;
     text-align: left;
+    border-bottom: 1px solid var(--border-color);
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #f8f9fa;
+    font-weight: 600;
 }
 
-.alert {
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-
-.alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.nav {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.nav a {
-    margin-right: 15px;
-    color: #3498db;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 20px;
+/* Badges */
+.badge, .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
     font-size: 0.85em;
     font-weight: bold;
-    text-transform: capitalize;
+    white-space: nowrap;
 }
 
-.status-awaiting_quote { background-color: #ffeeba; color: #856404; }
-.status-quoted { background-color: #bee5eb; color: #0c5460; }
-.status-confirmed { background-color: #c3e6cb; color: #155724; }
-.status-completed { background-color: #d1ecf1; color: #0c5460; } /* Similar to quoted but maybe different shade */
-.status-cancelled, .status-rejected { background-color: #f8d7da; color: #721c24; }
+.status-confirmed, .badge-confirmed { background-color: var(--status-success-bg); color: var(--status-success-text); }
+.status-awaiting_quote, .badge-awaiting_quote { background-color: var(--status-warning-bg); color: var(--status-warning-text); }
+.status-quoted, .badge-quoted { background-color: var(--status-info-bg); color: var(--status-info-text); }
+.status-completed, .badge-completed { background-color: #e2e6ea; color: #383d41; }
+.status-cancelled, .badge-cancelled, .status-rejected, .badge-rejected { background-color: var(--status-danger-bg); color: var(--status-danger-text); }
+.badge-staff { background-color: var(--primary-color); color: #fff; }
+.badge-customer { background-color: var(--accent-color); color: #fff; }
+
+/* Header / Nav */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-lg);
+    height: var(--header-height);
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.admin-brand { font-size: 1.2em; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+.admin-brand i { color: var(--secondary-color); }
+
+.nav-toggle { display: none; font-size: 1.5em; cursor: pointer; }
+
+.admin-nav a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    margin-left: 20px;
+    padding: 8px 0;
+}
+.admin-nav a:hover { color: white; }
+.admin-nav a.btn-new-booking {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stat-card {
+    background: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 4px solid var(--accent-color);
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .admin-wrapper {
+        display: block; /* Stack Sidebar */
+    }
+
+    .admin-sidebar {
+        display: none; /* Hidden by default on mobile, toggled via JS if it was a real sidebar */
+        /* In this specific current design (admin_header.php uses horizontal top nav), we toggle the nav items */
+    }
+
+    .admin-header {
+        padding: 0 var(--spacing-md);
+    }
+
+    .nav-toggle { display: block; }
+
+    .admin-nav {
+        display: none;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background-color: var(--primary-color);
+        flex-direction: column;
+        padding: var(--spacing-md);
+        z-index: 1000;
+    }
+
+    .admin-nav.active { display: flex; }
+
+    .admin-nav a {
+        margin: 0;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Container padding */
+    .container, .admin-main { padding: var(--spacing-md); }
+
+    /* Card View for Tables on Mobile (Optional, strict horizontal scroll is safer for data density, staying with .table-responsive for now) */
+    
+    /* Modals */
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.5); 
+    overflow: auto; /* Enable scroll if modal is tall */
+    justify-content: center; 
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff; 
+    padding: var(--spacing-lg); 
+    border-radius: 8px; 
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+/* Tabs */
+.nav-tabs { display: flex; border-bottom: 2px solid #ddd; margin-bottom: var(--spacing-md); overflow-x: auto; }
+.nav-tabs button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+}
+.nav-tabs button.active {
+    border-bottom-color: var(--accent-color);
+    color: var(--accent-color);
+    font-weight: bold;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
