@@ -18,6 +18,9 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
     
+    $admin_pass_hash = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // password123
+    $admin_sec_hash = password_hash('123', PASSWORD_DEFAULT);
+
     // SQL to reset database
     $sql = "
     SET FOREIGN_KEY_CHECKS = 0;
@@ -26,10 +29,14 @@ try {
 
     CREATE TABLE users (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
         email VARCHAR(150) NOT NULL UNIQUE,
         phone_number VARCHAR(20) NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
-        billing_address TEXT,
+        security_question VARCHAR(255) NOT NULL,
+        security_answer_hash VARCHAR(255) NOT NULL,
+        billing_address TEXT NOT NULL,
         role VARCHAR(20) DEFAULT 'customer',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -48,8 +55,8 @@ try {
     );
 
     -- Seed Admin: admin@cleaning.com / password123
-    INSERT INTO users (email, password_hash, role, phone_number) VALUES 
-    ('admin@cleaning.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'staff', '07700900000');
+    INSERT INTO users (first_name, last_name, email, phone_number, password_hash, security_question, security_answer_hash, billing_address, role) VALUES 
+    ('Admin', 'User', 'admin@cleaning.com', '07700900000', '$admin_pass_hash', 'Secret', '$admin_sec_hash', 'Admin HQ', 'staff');
 
     SET FOREIGN_KEY_CHECKS = 1;
     ";
