@@ -3,15 +3,16 @@
 require_once 'db_connect.php';
 require_once 'admin_header.php';
 
-// KPI: Total Revenue
+// KPI: Total Revenue (Completed)
 $stmt = $pdo->query("SELECT SUM(actual_bill) FROM bookings WHERE status = 'completed'");
 $total_revenue = $stmt->fetchColumn() ?: 0;
 
-// KPI: Pending Revenue
-$stmt = $pdo->query("SELECT SUM(quoted_price) FROM bookings WHERE status IN ('quoted', 'confirmed')");
+// KPI: Pending Revenue (Confirmed only)
+// Constraint: Do not include bookings with status 'quoted' in this total.
+$stmt = $pdo->query("SELECT SUM(quoted_price) FROM bookings WHERE status = 'confirmed'");
 $pending_revenue = $stmt->fetchColumn() ?: 0;
 
-// KPI: Total Jobs
+// KPI: Total Jobs Completed
 $stmt = $pdo->query("SELECT COUNT(*) FROM bookings WHERE status = 'completed'");
 $total_completed = $stmt->fetchColumn() ?: 0;
 
@@ -55,7 +56,7 @@ for ($i = 1; $i <= 12; $i++) {
             <div class="value">$<?php echo number_format($total_revenue, 2); ?></div>
         </div>
         <div class="stat-card" style="border-left-color: var(--warning-color);">
-            <h3>Pending Revenue</h3>
+            <h3>Pending Revenue (Confirmed)</h3>
             <div class="value">$<?php echo number_format($pending_revenue, 2); ?></div>
         </div>
         <div class="stat-card" style="border-left-color: var(--success-color);">
@@ -86,7 +87,7 @@ new Chart(ctx, {
                 borderRadius: 4
             },
             {
-                label: 'Pending/Confirmed ($)',
+                label: 'Pending (Confirmed) ($)',
                 data: <?php echo json_encode($data_pending); ?>,
                 backgroundColor: '#f1c40f',
                 borderRadius: 4

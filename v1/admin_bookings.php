@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_booking'])) {
     $date = $_POST['scheduled_date'];
 
     if ($user_id && $job_desc && $address && $date) {
-        // Default status: awaiting_quote (Instruction 4)
         $stmt = $pdo->prepare("INSERT INTO bookings (user_id, job_description, service_address, scheduled_date, status) VALUES (?, ?, ?, ?, 'awaiting_quote')");
         if ($stmt->execute([$user_id, $job_desc, $address, $date])) {
             $message = "Booking created successfully.";
@@ -31,11 +30,12 @@ if (isset($_GET['delete_id'])) {
     }
 }
 
-// Fetch All Bookings
+// Fetch All Bookings (Sorted by Status Priority)
+// Priority: awaiting_quote > quoted > confirmed > completed > rejected > cancelled
 $sql = "SELECT b.*, u.first_name, u.last_name, u.email, u.phone_number 
         FROM bookings b 
         JOIN users u ON b.user_id = u.id 
-        ORDER BY b.created_at DESC";
+        ORDER BY FIELD(b.status, 'awaiting_quote', 'quoted', 'confirmed', 'completed', 'rejected', 'cancelled'), b.created_at DESC";
 $bookings = $pdo->query($sql)->fetchAll();
 
 // Fetch Users for Dropdown

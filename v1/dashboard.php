@@ -5,22 +5,36 @@ require('db_connect.php');
 
 $user_id = $_SESSION['user_id'];
 
-// Handle Customer Actions (Accept/Reject Quote)
+// Handle Customer Actions (Accept/Reject/Cancel)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST['action'])) {
     $booking_id = $_POST['booking_id'];
     $action = $_POST['action'];
     
     $new_status = '';
+    $current_status_check = [];
+
     if ($action === 'accept') {
         $new_status = 'confirmed';
+        $current_status_check = ['quoted'];
     } elseif ($action === 'reject') {
         $new_status = 'rejected';
+        $current_status_check = ['quoted'];
+    } elseif ($action === 'cancel') {
+        $new_status = 'cancelled';
+        // Condition: Only if status is 'awaiting_quote' or 'confirmed'
+        $current_status_check = ['awaiting_quote', 'confirmed'];
     }
 
     if ($new_status) {
         // Verify ownership and current status before updating
-        $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ? AND user_id = ? AND status = 'quoted'");
-        $stmt->execute([$new_status, $booking_id, $user_id]);
+        // Create placeholders string based on array length
+        $placeholders = str_repeat('?,', count($current_status_check) - 1) . '?';
+        $sql = "UPDATE bookings SET status = ? WHERE id = ? AND user_id = ? AND status IN ($placeholders)";
+        
+        $params = array_merge([$new_status, $booking_id, $user_id], $current_status_check);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        
         header("Location: dashboard.php"); 
         exit();
     }
@@ -86,14 +100,17 @@ $bookings = $stmt->fetchAll();
                                         <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
                                         <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
                                     </form>
-                                <?php elseif ($booking['status'] == 'confirmed'): ?>
-                                    <span>Job Confirmed</span>
+                                <?php elseif ($booking['status'] == 'awaiting_quote' || $booking['status'] == 'confirmed'): ?>
+                                    <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                        <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
+                                        <button type="submit" name="action" value="cancel" class="btn btn-danger">Cancel Booking</button>
+                                    </form>
                                 <?php elseif ($booking['status'] == 'completed'): ?>
                                     <span>Completed</span>
-                                <?php elseif ($booking['status'] == 'rejected'): ?>
-                                    <span>Rejected</span>
+                                <?php elseif ($booking['status'] == 'cancelled'): ?>
+                                    <span>Cancelled</span>
                                 <?php else: ?>
-                                    <span>Pending</span>
+                                    <span><?php echo ucfirst($booking['status']); ?></span>
                                 <?php endif; ?>
                             </td>
                         </tr>

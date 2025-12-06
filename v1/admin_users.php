@@ -33,11 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
 // Handle Edit User
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     $id = $_POST['edit_id'];
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $email = trim($_POST['email']);
     $billing = trim($_POST['billing_address']);
     $new_pass = $_POST['new_password'];
 
-    $sql = "UPDATE users SET billing_address = ?";
-    $params = [$billing];
+    $sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, billing_address = ?";
+    $params = [$first_name, $last_name, $email, $billing];
 
     if (!empty($new_pass)) {
         $sql .= ", password_hash = ?";
@@ -155,7 +158,7 @@ $users = $stmt->fetchAll();
                     <td>$<?php echo number_format($u['total_revenue'], 2); ?></td>
                     <td><?php echo date('d M Y', strtotime($u['created_at'])); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-secondary" onclick="openEditModal(<?php echo $u['id']; ?>, '<?php echo htmlspecialchars(addslashes($u['billing_address'])); ?>')">Edit</button>
+                        <button class="btn btn-sm btn-secondary" onclick="openEditModal(<?php echo $u['id']; ?>, '<?php echo htmlspecialchars(addslashes($u['first_name'])); ?>', '<?php echo htmlspecialchars(addslashes($u['last_name'])); ?>', '<?php echo htmlspecialchars(addslashes($u['email'])); ?>', '<?php echo htmlspecialchars(addslashes($u['billing_address'])); ?>')">Edit</button>
                         <a href="?toggle_role_id=<?php echo $u['id']; ?>&current_role=<?php echo $u['role']; ?>" class="btn btn-sm btn-primary" onclick="return confirm('Toggle role?');">Role</a>
                         <?php if ($u['id'] != $_SESSION['user_id']): ?>
                         <a href="?delete_id=<?php echo $u['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete?');">Delete</a>
@@ -175,6 +178,18 @@ $users = $stmt->fetchAll();
         <form method="post">
             <input type="hidden" name="edit_id" id="modal_edit_id">
             <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="first_name" id="modal_first" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="last_name" id="modal_last" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" id="modal_email" class="form-control" required>
+            </div>
+            <div class="form-group">
                 <label>Billing Address</label>
                 <textarea name="billing_address" id="modal_billing" class="form-control" required></textarea>
             </div>
@@ -191,9 +206,12 @@ $users = $stmt->fetchAll();
 </div>
 
 <script>
-function openEditModal(id, billing) {
+function openEditModal(id, first, last, email, billing) {
     document.getElementById('editModal').style.display = 'flex';
     document.getElementById('modal_edit_id').value = id;
+    document.getElementById('modal_first').value = first;
+    document.getElementById('modal_last').value = last;
+    document.getElementById('modal_email').value = email;
     document.getElementById('modal_billing').value = billing;
 }
 </script>
