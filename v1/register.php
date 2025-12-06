@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $security_answer = $_POST['security_answer'];
     $password = $_POST['password'];
     
-    // Basic validation
+    // Validation
     if (empty($first_name) || empty($last_name) || empty($email) || empty($phone) || empty($billing_address) || empty($security_question) || empty($security_answer) || empty($password)) {
         $message = "All fields are required.";
     } else {
@@ -30,10 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $security_answer_hash = password_hash($security_answer, PASSWORD_DEFAULT);
             $role = 'customer'; 
 
-            $sql = "INSERT INTO users (first_name, last_name, email, phone_number, password_hash, security_question, security_answer_hash, billing_address, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO users (first_name, last_name, email, phone_number, billing_address, password_hash, security_question, security_answer_hash, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             
-            if ($stmt->execute([$first_name, $last_name, $email, $phone, $password_hash, $security_question, $security_answer_hash, $billing_address, $role])) {
+            if ($stmt->execute([$first_name, $last_name, $email, $phone, $billing_address, $password_hash, $security_question, $security_answer_hash, $role])) {
                  header("Location: login.php");
                  exit();
             } else {

@@ -7,44 +7,41 @@ require_once 'admin_header.php';
 $stmt = $pdo->query("SELECT SUM(actual_bill) FROM bookings WHERE status = 'completed'");
 $total_revenue = $stmt->fetchColumn() ?: 0;
 
-// KPI: Pending Revenue (Quoted but not completed)
+// KPI: Pending Revenue
 $stmt = $pdo->query("SELECT SUM(quoted_price) FROM bookings WHERE status IN ('quoted', 'confirmed')");
 $pending_revenue = $stmt->fetchColumn() ?: 0;
 
-// KPI: Total Jobs Completed
+// KPI: Total Jobs
 $stmt = $pdo->query("SELECT COUNT(*) FROM bookings WHERE status = 'completed'");
 $total_completed = $stmt->fetchColumn() ?: 0;
 
 $year = date('Y');
 
-// Dataset 1: Actual Revenue
+// Dataset 1: Actual Revenue (Status: completed)
 $sql = "SELECT MONTH(scheduled_date) as m, SUM(actual_bill) as total 
         FROM bookings 
         WHERE status = 'completed' AND YEAR(scheduled_date) = ? 
-        GROUP BY MONTH(scheduled_date) 
-        ORDER BY m";
+        GROUP BY MONTH(scheduled_date)";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$year]);
-$actual_results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+$actual_raw = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// Dataset 2: Pending Revenue
+// Dataset 2: Pending Revenue (Status: confirmed)
 $sql = "SELECT MONTH(scheduled_date) as m, SUM(quoted_price) as total 
         FROM bookings 
         WHERE status = 'confirmed' AND YEAR(scheduled_date) = ? 
-        GROUP BY MONTH(scheduled_date) 
-        ORDER BY m";
+        GROUP BY MONTH(scheduled_date)";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$year]);
-$pending_results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+$pending_raw = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// Fill missing months
-$chart_data_actual = [];
-$chart_data_pending = [];
-for ($i=1; $i<=12; $i++) {
-    $chart_data_actual[] = $actual_results[$i] ?? 0;
-    $chart_data_pending[] = $pending_results[$i] ?? 0;
+// Normalize Data
+$data_actual = [];
+$data_pending = [];
+for ($i = 1; $i <= 12; $i++) {
+    $data_actual[] = $actual_raw[$i] ?? 0;
+    $data_pending[] = $pending_raw[$i] ?? 0;
 }
-
 ?>
 
 <div class="admin-container">
@@ -68,7 +65,7 @@ for ($i=1; $i<=12; $i++) {
     </div>
 
     <div class="stat-card">
-        <h3>Revenue vs Projected (<?php echo $year; ?>)</h3>
+        <h3>Revenue Overview (<?php echo $year; ?>)</h3>
         <div style="height: 400px;">
             <canvas id="revenueChart"></canvas>
         </div>
@@ -84,13 +81,13 @@ new Chart(ctx, {
         datasets: [
             {
                 label: 'Actual Revenue ($)',
-                data: <?php echo json_encode($chart_data_actual); ?>,
+                data: <?php echo json_encode($data_actual); ?>,
                 backgroundColor: '#3498db',
                 borderRadius: 4
             },
             {
                 label: 'Pending/Confirmed ($)',
-                data: <?php echo json_encode($chart_data_pending); ?>,
+                data: <?php echo json_encode($data_pending); ?>,
                 backgroundColor: '#f1c40f',
                 borderRadius: 4
             }
